@@ -82,8 +82,8 @@ def decode(img):
     else:
       letterBinary = letterBinary + redBinary[7] + greenBinary[7] + blueBinary[7]
       letterAscii = binaryToNumber(letterBinary)
-      letter = chr(letterAscii)
       msg = msg + chr(letterAscii)
+      letterBinary = ""
 
     pixel = pixel + 1
     x = pixel % width
@@ -97,13 +97,31 @@ def numberToBinary(num):
   """Takes a base10 number and converts to a binary string with 8 bits"""
   binary = ""
   #Convert from decimal to binary
-
+  while num > 0:
+    binary = str(num % 2) + binary
+    num = num // 2
+  
+  while len(binary) < 8:
+    binary = "0" + binary
 
   return binary
 
 def binaryToNumber(bin):
   """Takes a string binary value and converts it to a base10 integer."""
   decimal = 0
+  value = 1
+
+  while len(bin) > 0:
+    lastSpot = len(bin) - 1
+    lastDigit = bin[lastSpot]
+
+    if lastDigit == '1':
+      decimal = decimal + value 
+
+    value = value * 2
+    
+    bin = bin[0:lastSpot]
+
 
 
   return decimal
@@ -115,11 +133,11 @@ def main():
   encode(myImg, myMsg)
   myImg.close()
 
-  """
+  #"""
   yourImg = Image.open('secretImg.png')
   msg = decode(yourImg)
   print(msg)
-  """
+  #"""
     
 if __name__ == '__main__':
   main()
